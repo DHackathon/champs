@@ -4,8 +4,6 @@ import "./Ownable.sol";
 import "./Hackathon.sol";
 
 contract HackathonFactory is Ownable {
-    address public owner;
-
     event HackathonCreated(
         address indexed _owner,
         address indexed _contract
