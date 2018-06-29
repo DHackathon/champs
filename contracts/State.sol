@@ -2,7 +2,7 @@ pragma solidity ^0.4.0;
 
 contract HackathonState {
     enum State { Created, CrowFound, SignUp, Match, Vote, Final, Failed } // Enum
-    State state;
+    State public state;
     // Modifiers can receive arguments:
     modifier requireState(State _state) {
         require(state == _state);
@@ -12,5 +12,4 @@ contract HackathonState {
     function HackathonState() public {
         state = State.Created;
     }
-    
 }
