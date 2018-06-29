@@ -44,6 +44,7 @@ contract HackathonFactory is Ownable {
             _registerLowerLimit
         );
         hackathon.transfer(msg.value);
+        hackathon.transferOwnership(msg.sender);
         HackathonCreated(msg.sender, address(hackathon));
     }
 }
