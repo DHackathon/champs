@@ -53,6 +53,7 @@ contract Hackathon is Ownable, HackathonState {
     address [] voteWiners;
 
     function Hackathon(
+        uint256 _initFound,
         uint256 _crowdFoundTarget,
         uint256 _crowdFoundPeriod,
         uint256 _signUpPeriod,
@@ -81,8 +82,8 @@ contract Hackathon is Ownable, HackathonState {
         require(_registerUpperLimit >= _registerLowerLimit);
         require(_registerLowerLimit > 0);
 
-        initFound = msg.value;
-        totalFound = msg.value;
+        initFound = _initFound;
+        totalFound = _initFound;
 
         crowdFoundTarget = _crowdFoundTarget;
 
@@ -100,6 +101,10 @@ contract Hackathon is Ownable, HackathonState {
         
         registerUpperLimit = _registerUpperLimit;
         registerLowerLimit = _registerLowerLimit;
+    }
+    
+    function getInitFound() public view returns (uint256) {
+        return initFound;
     }
     
     function startCrowdFound() public requireState(State.Created) onlyOwner {
@@ -253,6 +258,8 @@ contract Hackathon is Ownable, HackathonState {
         if (voteBonusFound > 0) {
             bonus[owner] = voteBonusFound;
         }
+    }
+    function() public payable requireState(State.Created) {
     }
     
     // Remember to zero the pending refund before

@@ -28,6 +28,7 @@ contract HackathonFactory is Ownable {
         uint256 _registerLowerLimit
     ) public payable {
         Hackathon hackathon = new Hackathon(
+            msg.value,
             _crowdFoundTarget,
             _crowdFoundPeriod,
             _signUpPeriod,
@@ -42,6 +43,7 @@ contract HackathonFactory is Ownable {
             _registerUpperLimit,
             _registerLowerLimit
         );
+        hackathon.transfer(msg.value);
         HackathonCreated(msg.sender, address(hackathon));
     }
 }
