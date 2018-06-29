@@ -34,11 +34,11 @@ contract Hackathon is Ownable, HackathonState {
     uint256 public thirdBonus;
     uint256 public voteBonus;
     
-    address [] registers;
+    address [] public registers;
     mapping(address => bool) public registersMap;
 
     mapping(address => bool) public voted;
-    address [] voters;
+    address [] public voters;
     mapping(address => address) public voteTargets;
     mapping(address => uint256) public votes;
     
@@ -50,7 +50,7 @@ contract Hackathon is Ownable, HackathonState {
     address public second;
     address public third;
     mapping(address => uint256) public bonus;
-    address [] voteWiners;
+    address [] public voteWiners;
     
     event CrowdFoundStarted(
         address indexed _mannul,
@@ -82,7 +82,7 @@ contract Hackathon is Ownable, HackathonState {
         uint256 _time
     );
     
-    event Finalize(
+    event ToFinalize(
         address indexed _mannul,
         uint256 _time
     );
@@ -255,7 +255,7 @@ contract Hackathon is Ownable, HackathonState {
     }
     
     
-    function finalize() public requireState(State.Vote) {
+    function toFinalize() public requireState(State.Vote) {
         require(block.timestamp > closingVote);
         state = State.Final;
         
@@ -306,7 +306,7 @@ contract Hackathon is Ownable, HackathonState {
             bonus[owner] = voteBonusFound;
         }
         
-        Finalize(msg.sender, block.timestamp);
+        ToFinalize(msg.sender, block.timestamp);
     }
 
     /**
