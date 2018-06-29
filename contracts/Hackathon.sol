@@ -315,7 +315,7 @@ contract Hackathon is Ownable, HackathonState {
     // Remember to zero the pending refund before
     function withdraw() public {
         require(state == State.Final || state == State.Failed);
-        require(owner == msg.sender || crowdFound[msg.sender] > 0);
+        require(owner == msg.sender || crowdFound[msg.sender] > 0 || bonus[msg.sender] > 0);
         
         uint256 amount = 0;
         if (registersMap[msg.sender]) {
