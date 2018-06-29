@@ -1,5 +1,4 @@
-pragma solidity ^0.4.0;
-
+pragma solidity ^0.4.19;
 contract HackathonState {
     enum State { Created, CrowFound, SignUp, Match, Vote, Final, Failed } // Enum
     State public state;

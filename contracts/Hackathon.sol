@@ -1,5 +1,4 @@
-pragma solidity ^0.4.0;
-
+pragma solidity ^0.4.19;
 import "./Ownable.sol";
 import "./SafeMath.sol";
 import "./State.sol";

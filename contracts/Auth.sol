@@ -1,5 +1,4 @@
-pragma solidity ^0.4.0;
-
+pragma solidity ^0.4.19;
 contract Auth {
     mapping(address => bytes32) internal verification;
     
