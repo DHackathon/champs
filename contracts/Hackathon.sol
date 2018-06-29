@@ -51,6 +51,41 @@ contract Hackathon is Ownable, HackathonState {
     address public third;
     mapping(address => uint256) public bonus;
     address [] voteWiners;
+    
+    event CrowdFoundStarted(
+        address indexed _mannul,
+        uint256 _start,
+        uint256 _closing
+    );
+    
+    event SignUpStarted(
+        address indexed _mannul,
+        uint256 _start,
+        uint256 _closing
+    );
+    
+    event MatchStarted(
+        address indexed _mannul,
+        uint256 _start,
+        uint256 _closing
+    );
+    
+    event VoteStarted(
+        address indexed _mannul,
+        uint256 _start,
+        uint256 _closing
+    );
+    
+    event ToFailed(
+        address indexed _mannul,
+        State previous_state,
+        uint256 _time
+    );
+    
+    event Finalize(
+        address indexed _mannul,
+        uint256 _time
+    );
 
     function Hackathon(
         uint256 _initFound,
@@ -112,6 +147,7 @@ contract Hackathon is Ownable, HackathonState {
     function startCrowdFound() public requireState(State.Created) onlyOwner {
         state = State.CrowFound;
         closingCrowdFound = block.timestamp.add(crowdFoundPeriod);
+        CrowdFoundStarted(msg.sender, block.timestamp, closingCrowdFound);
     }
     
     function buy(address _beneficiary) public payable requireState(State.CrowFound) {
@@ -137,6 +173,7 @@ contract Hackathon is Ownable, HackathonState {
 
         state = State.SignUp;
         closingSignUp = block.timestamp.add(signUpPeriod);
+        SignUpStarted(msg.sender, block.timestamp, closingSignUp);
     }
     
     function signUp(address _register) public payable requireState(State.SignUp) {
@@ -174,6 +211,7 @@ contract Hackathon is Ownable, HackathonState {
     
     function failed() public {
         require(isFailed());
+        ToFailed(msg.sender, state, block.timestamp);
         state = State.Failed;
     }
     
@@ -183,6 +221,8 @@ contract Hackathon is Ownable, HackathonState {
 
         state = State.Match;
         closingMatch = block.timestamp.add(matchPeriod);
+        
+        MatchStarted(msg.sender, block.timestamp, closingMatch);
     }
     
     
@@ -191,6 +231,7 @@ contract Hackathon is Ownable, HackathonState {
 
         state = State.Vote;
         closingVote = block.timestamp.add(votePeriod);
+        VoteStarted(msg.sender, block.timestamp, closingVote);
     }
     
     
@@ -264,6 +305,8 @@ contract Hackathon is Ownable, HackathonState {
         if (voteBonusFound > 0) {
             bonus[owner] = voteBonusFound;
         }
+        
+        Finalize(msg.sender, block.timestamp);
     }
 
     /**
