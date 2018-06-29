@@ -82,7 +82,7 @@ contract Hackathon is Ownable, HackathonState {
         uint256 _time
     );
     
-    event ToFinalize(
+    event Finalize(
         address indexed _mannul,
         uint256 _time
     );
@@ -259,22 +259,21 @@ contract Hackathon is Ownable, HackathonState {
         require(block.timestamp > closingVote);
         state = State.Final;
         
-        address _champ = registers[0];
-        address _second = registers[0];
-        address _third = registers[0];
+        address _champ;
+        address _second;
+        address _third;
         
         for (uint i = 0; i < registers.length; i++) {
-            
-            if (votes[registers[i]] > votes[_champ]) {
+            if (votes[registers[i]] >= votes[_champ]) {
                 _champ = registers[i];
-            }
-            
-            if (votes[registers[i]] > votes[_second] && votes[registers[i]] < votes[_champ]) {
-                _second = registers[i];
-            }
-            
-            if (votes[registers[i]] > votes[_third] && votes[registers[i]] < votes[_second]) {
-                _third = registers[i];
+            } else {
+                if (votes[registers[i]] >= votes[_second]) {
+                    _second = registers[i];
+                } else {
+                    if (votes[registers[i]] >= votes[_third]) {
+                        _third = registers[i];
+                    }
+                }
             }
         }
         
@@ -287,8 +286,6 @@ contract Hackathon is Ownable, HackathonState {
         bonus[third] = totalFound.mul(thirdBonus).div(100);
         
         uint256 voteBonusFound = totalFound.sub(bonus[champ]).sub(bonus[second]).sub(bonus[third]);
-        
-        
         
         for (uint j = 0; j < voters.length; j++) {
             if (voteTargets[voters[j]] == champ) {
@@ -306,7 +303,7 @@ contract Hackathon is Ownable, HackathonState {
             bonus[owner] = voteBonusFound;
         }
         
-        ToFinalize(msg.sender, block.timestamp);
+        Finalize(msg.sender, block.timestamp);
     }
 
     /**
@@ -344,8 +341,7 @@ contract Hackathon is Ownable, HackathonState {
                 bonus[msg.sender] = 0;
             }
         }
-        
-        
+
         if (amount > 0) {
             msg.sender.transfer(amount);
         }
