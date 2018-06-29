@@ -5,20 +5,74 @@
   <title></title>
 </head>
 <body>
-  <section class="hero is-medium is-primary is-bold">
-    <div class="hero-body">
-      <div class="container">
-        <h1 class="title">
-          Neuron
-        </h1>
-        <h2 class="subtitle">
-          for chrome extension
-        </h2>
+  <div id="container" class="container-1 container is-widescreen">
+    <section class="hero is-medium is-primary is-bold">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            Neuron
+          </h1>
+          <h2 class="subtitle">
+            for chrome extension
+          </h2>
+        </div>
+      </div>
+    </section>
+    <div id="main"></div>
+
+    <div id="send-tx-modal" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Send</p>
+        </header>
+        <section class="modal-card-body">
+          <div class="field">
+            <label class="label">to</label>
+            <div class="control">
+              <input id="tx-to-input" class="input" type="text" placeholder="address">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">value</label>
+            <div class="control">
+              <input id="tx-value-input" class="input" type="number" placeholder="value">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">nonce</label>
+            <div class="control">
+              <input id="tx-nonce-input" required class="input" type="text" placeholder="nonce">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">quota</label>
+            <div class="control">
+              <input id="tx-quota-input" required class="input" type="number" placeholder="quota">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">data</label>
+            <div class="control">
+              <textarea id="tx-data-input" class="textarea" placeholder="data"></textarea>
+            </div>
+          </div>
+
+        </section>
+        <footer class="modal-card-foot">
+          <button id="send-btn" class="button is-success">Send</button>
+          <button id="close-btn" class="button">Cancel</button>
+        </footer>
       </div>
     </div>
-  </section>
-
-  <div id="main" class="main container is-widescreen">
   </div>
+
+  <input id="checkTxInput" type="hidden" value="">
+  <input id="checkTxStatus" type="hidden" value="">
+  <input id="txRes" type="hidden" value="">
 </body>
 </html>

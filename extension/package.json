@@ -21,8 +21,10 @@
   },
   "dependencies": {
     "@nervos/web3": "^0.17.12",
+    "bignumber.js": "^7.2.1",
     "bootstrap-material-design": "4.1.1",
     "bulma": "^0.7.1",
+    "bulma-pageloader": "^2.1.0",
     "chrome-fs": "^10.0.0",
     "ethjs-account": "^0.1.4",
     "fs": "^0.0.1-security",
