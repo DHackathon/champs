@@ -10,7 +10,7 @@ contract Hackathon is Ownable, HackathonState {
     uint256 public initFound;
     uint256 public totalCrowdFound;
     uint256 public totalFound;
-    mapping(address => uint256) internal crowdFound;
+    mapping(address => uint256) public crowdFound;
 
 
     uint256 public crowdFoundTarget;
@@ -35,12 +35,12 @@ contract Hackathon is Ownable, HackathonState {
     uint256 public voteBonus;
     
     address [] registers;
-    mapping(address => bool) internal registersMap;
+    mapping(address => bool) public registersMap;
 
-    mapping(address => bool) internal voted;
+    mapping(address => bool) public voted;
     address [] voters;
-    mapping(address => address) internal voteTargets;
-    mapping(address => uint256) internal votes;
+    mapping(address => address) public voteTargets;
+    mapping(address => uint256) public votes;
     
     uint256 public registerUpperLimit;
     uint256 public registerLowerLimit;
@@ -49,7 +49,7 @@ contract Hackathon is Ownable, HackathonState {
     address public champ;
     address public second;
     address public third;
-    mapping(address => uint256) internal bonus;
+    mapping(address => uint256) public bonus;
     address [] voteWiners;
 
     function Hackathon(
@@ -121,6 +121,10 @@ contract Hackathon is Ownable, HackathonState {
         crowdFound[_beneficiary] = crowdFound[_beneficiary].add(msg.value);
     }
     
+    function remainCrowdFound() public view returns (uint256) {
+        return crowdFoundTarget.sub(totalCrowdFound);
+    }
+    
     function crowdFoundGoalReached() public view returns (bool) {
         return totalCrowdFound >= crowdFoundTarget;
     }
@@ -155,7 +159,7 @@ contract Hackathon is Ownable, HackathonState {
         return false;
     }
     
-    function is_failed() public view returns (bool) {
+    function isFailed() public view returns (bool) {
         if (state == State.CrowFound && block.timestamp > closingCrowdFound && totalCrowdFound < crowdFoundTarget){
             return true;
         }
@@ -167,7 +171,7 @@ contract Hackathon is Ownable, HackathonState {
     }
     
     function failed() public {
-        require(is_failed());
+        require(isFailed());
         state = State.Failed;
     }
     
@@ -259,6 +263,10 @@ contract Hackathon is Ownable, HackathonState {
             bonus[owner] = voteBonusFound;
         }
     }
+
+    /**
+    * @dev Fallback function allowing the contract to receive funds.
+    */
     function() public payable requireState(State.Created) {
     }
     
@@ -266,37 +274,35 @@ contract Hackathon is Ownable, HackathonState {
     function withdraw() public {
         require(state == State.Final || state == State.Failed);
         require(owner == msg.sender || crowdFound[msg.sender] > 0);
+        
+        uint256 amount = 0;
+        if (registersMap[msg.sender]) {
+            registersMap[msg.sender] = false;
+            amount = amount + deposit;
+        }
+            
         if (state == State.Failed) {
             if (owner == msg.sender && initFound > 0) {
-                uint256 owner_amount = initFound;
+                amount = amount + initFound;
                 initFound = 0;
-                msg.sender.transfer(owner_amount);
             }
             
             if (crowdFound[msg.sender] > 0) {
-                uint256 amount = crowdFound[msg.sender];
+                amount = amount + crowdFound[msg.sender];
                 crowdFound[msg.sender] = 0;
-                msg.sender.transfer(amount);
-            }
-            
-            if (registersMap[msg.sender]) {
-                registersMap[msg.sender] = false;
-                msg.sender.transfer(deposit);
             }
         }
         
         if (state == State.Final) {
-            if (registersMap[msg.sender]) {
-                registersMap[msg.sender] = false;
-                msg.sender.transfer(deposit);
-            }
-            
             if (bonus[msg.sender] > 0 ) {
-                uint256 bonus_amount = bonus[msg.sender];
+                amount = amount + bonus[msg.sender];
                 bonus[msg.sender] = 0;
-                msg.sender.transfer(bonus_amount);
             }
         }
         
+        
+        if (amount > 0) {
+            msg.sender.transfer(amount);
+        }
     }
 }
