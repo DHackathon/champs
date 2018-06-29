@@ -77,6 +77,8 @@ contract Hackathon is Ownable, HackathonState {
         require(_secondBonus <= 100);
         require(_thirdBonus <= 100);
         require(_voteBonus <= 100);
+        require(_registerLowerLimit >= 3);
+
         require(_champBonus.add(_secondBonus).add(_thirdBonus).add(_voteBonus) == 100); 
         
         require(_registerUpperLimit >= _registerLowerLimit);
