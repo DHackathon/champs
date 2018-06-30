@@ -151,7 +151,6 @@ contract Hackathon is Ownable, HackathonState {
     
     function buy(address _beneficiary) public payable requireState(State.CrowFound) {
         require(totalCrowdFound.add(msg.value) <= crowdFoundTarget);
-        require(block.timestamp  <= closingCrowdFound);
         
         totalCrowdFound = totalCrowdFound.add(msg.value);
         totalFound = totalFound.add(msg.value);
@@ -167,7 +166,6 @@ contract Hackathon is Ownable, HackathonState {
     }
     
     function startSignUp() public requireState(State.CrowFound) onlyOwner {
-        require(block.timestamp > closingCrowdFound);
         require(totalCrowdFound >= crowdFoundTarget);
 
         state = State.SignUp;
@@ -176,7 +174,6 @@ contract Hackathon is Ownable, HackathonState {
     }
     
     function signUp(address _register) public payable requireState(State.SignUp) {
-        require(block.timestamp <= closingSignUp);
         require(msg.value == deposit.add(signUpFee));
         require(registers.length < registerUpperLimit);
         
@@ -215,7 +212,6 @@ contract Hackathon is Ownable, HackathonState {
     }
     
     function startMatch() public requireState(State.SignUp) onlyOwner {
-        require(block.timestamp > closingSignUp);
         require(registers.length >= registerLowerLimit);
 
         state = State.Match;
@@ -226,8 +222,6 @@ contract Hackathon is Ownable, HackathonState {
     
     
     function startVote() public requireState(State.Match) onlyOwner {
-        require(block.timestamp > closingMatch);
-
         state = State.Vote;
         closingVote = block.timestamp.add(votePeriod);
         VoteStarted(msg.sender, block.timestamp, closingVote);
@@ -255,7 +249,6 @@ contract Hackathon is Ownable, HackathonState {
     
     
     function toFinalize() public requireState(State.Vote) {
-        require(block.timestamp > closingVote);
         state = State.Final;
         
         address _champ;
