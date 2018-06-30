@@ -1,0 +1,6 @@
+[submodule "champs-frontend"]
+	path = champs-frontend
+	url = https://github.com/CryptapeHackathon/champs-frontend.git
+[submodule "champs-backend"]
+	path = champs-backend
+	url = https://github.com/CryptapeHackathon/champs-backend.git
